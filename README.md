@@ -7,22 +7,22 @@ A multi-account launcher for **Spiral Knights** on Windows. Keep all your accoun
 launch them with one click straight to the right knight, and lay the game windows out on your
 screen.
 
-![The Accounts page](screenshots/images/accounts.png)
+![The Accounts page](screenshots/accounts.png)
 
 ## Features
 
 - Password accounts and your Steam account in one list, each logging straight in as its knight.
 - Launch the ticked accounts, every account, or only the alts. The main account always starts
   first.
-- Window layouts: corners, side by side, cascade, two monitors, or your own saved layout. The last
-  one you used is applied by itself after every launch.
+- Window layouts: corners, side by side, cascade left or right, two monitors, or your own saved
+  layout. The last one you used is applied by itself after every launch.
 - Separate game settings for every account: keybinds, volume, resolution.
 - Alts can start muted, on low graphics and at a lower CPU priority, so the main client stays
   smooth.
 - Offers to update Spiral Knights when a patch is out.
 - Light and dark themes, or follow Windows.
 
-![The Arrange page](screenshots/images/arrange.png)
+![The Arrange page](screenshots/arrange.png)
 
 ## Download
 
@@ -47,7 +47,7 @@ Click **More info**, then **Run anyway**.
 4. Tick the accounts you want and press **Launch**.
 5. On the **Arrange** page, press **Arrange** on a layout. It is used again automatically next time.
 
-![The Settings page](screenshots/images/settings.png)
+![The Settings page](screenshots/settings.png)
 
 ## Is this allowed?
 

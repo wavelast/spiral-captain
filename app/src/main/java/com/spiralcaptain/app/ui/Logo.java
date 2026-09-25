@@ -3,15 +3,10 @@ package com.spiralcaptain.app.ui;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
@@ -19,16 +14,14 @@ import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public final class Logo {
+
+    private static final int[] ICON_SIZES = {16, 20, 24, 32, 40, 48, 64, 128, 256};
 
     private static List<Image> windowIcons;
 
@@ -59,10 +52,10 @@ public final class Logo {
     }
 
     private static final double SIDEBAR_SIZE = 76;
-    private static final String VERSION = "v1.0.0";
+    private static final String VERSION_PROPERTY = "jpackage.app-version";
 
     public static Node create() {
-        Group drawing = mark(null);
+        Group drawing = mark();
         drawing.getTransforms().add(new Scale(SIDEBAR_SIZE / CANVAS, SIDEBAR_SIZE / CANVAS, 0, 0));
         Group mark = new Group(drawing);
         mark.getStyleClass().add("logo-mark");
@@ -74,9 +67,13 @@ public final class Logo {
         VBox words = new VBox(-9, top, bottom);
         words.setAlignment(Pos.CENTER_LEFT);
 
-        Label version = new Label(VERSION);
-        version.getStyleClass().add("logo-version");
-        VBox column = new VBox(words, version);
+        VBox column = new VBox(words);
+        String version = System.getProperty(VERSION_PROPERTY);
+        if (version != null && !version.isBlank()) {
+            Label label = new Label("v" + version);
+            label.getStyleClass().add("logo-version");
+            column.getChildren().add(label);
+        }
         column.setAlignment(Pos.CENTER_LEFT);
 
         HBox logo = new HBox(12, mark, column);
@@ -87,83 +84,36 @@ public final class Logo {
 
     public static List<Image> windowIcons() {
         if (windowIcons == null) {
-            windowIcons = icons(16, 24, 32, 48, 64, 128);
+            List<Image> icons = new ArrayList<>();
+            for (int size : ICON_SIZES) {
+                URL png = Logo.class.getResource("/icons/icon-" + size + ".png");
+                if (png != null) {
+                    icons.add(new Image(png.toExternalForm()));
+                }
+            }
+            windowIcons = List.copyOf(icons);
         }
         return windowIcons;
     }
 
-    public static List<Image> icons(int... sizes) {
-        List<Image> icons = new ArrayList<>();
-        Palette palette = new Palette(Color.web("#f5c400"), Color.web("#4f8fbd"),
-                Color.web("#e4f2ff"), Color.web("#e4f2ff"), Color.web("#11263a"));
-        for (int size : sizes) {
-            icons.add(icon(palette, size));
-        }
-        return icons;
-    }
-
-    private static Image icon(Palette palette, int size) {
-        double margin = Math.max(0.5, size / 32.0);
-        double scale = (size - 2 * margin) / (2 * RING_RADIUS);
-        Group sized = new Group(mark(palette));
-        sized.getTransforms().add(new Translate(size / 2.0 - 24 * scale,
-                size / 2.0 - 24 * scale));
-        sized.getTransforms().add(new Scale(scale, scale, 0, 0));
-        SnapshotParameters parameters = new SnapshotParameters();
-        parameters.setFill(Color.TRANSPARENT);
-        parameters.setViewport(new Rectangle2D(0, 0, size, size));
-        WritableImage snapshot = sized.snapshot(parameters, new WritableImage(size, size));
-        BufferedImage pixels = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                pixels.setRGB(x, y, snapshot.getPixelReader().getArgb(x, y));
-            }
-        }
-        try {
-            ByteArrayOutputStream png = new ByteArrayOutputStream();
-            ImageIO.write(pixels, "png", png);
-            return new Image(new ByteArrayInputStream(png.toByteArray()));
-        } catch (IOException ioe) {
-            return snapshot;
-        }
-    }
-
-    private record Palette(Paint main, Paint follower, Paint helm, Paint line, Paint disc) { }
-
-    private static Circle ring(Palette palette) {
+    private static Circle ring() {
         Circle ring = new Circle(24, 24, RING_RADIUS - RING_WIDTH / 2);
         ring.setStrokeWidth(RING_WIDTH);
-        if (palette == null) {
-            ring.getStyleClass().add("logo-ring");
-        } else {
-            ring.setStroke(palette.main());
-            ring.setFill(palette.disc());
-        }
+        ring.getStyleClass().add("logo-ring");
         return ring;
     }
 
-    private static Group mark(Palette palette) {
+    private static Group mark() {
         Group drawing = new Group();
         for (int index = 0; index < FIN_ANGLES.length; index++) {
             SVGPath fin = fin(FIN_ANGLES[index]);
             fin.setStrokeWidth(0.7);
             fin.setStrokeLineJoin(StrokeLineJoin.ROUND);
-            boolean main = index == MAIN_FIN;
-            if (palette == null) {
-                fin.getStyleClass().add(main ? "logo-fin-main" : "logo-fin");
-            } else {
-                fin.setFill(main ? palette.main() : palette.follower());
-                fin.setStroke(palette.line());
-            }
+            fin.getStyleClass().add(index == MAIN_FIN ? "logo-fin-main" : "logo-fin");
             drawing.getChildren().add(fin);
         }
         Shape helm = helm();
-        if (palette == null) {
-            helm.getStyleClass().add("logo-helm");
-        } else {
-            helm.setFill(palette.helm());
-            helm.setStroke(null);
-        }
+        helm.getStyleClass().add("logo-helm");
         drawing.getChildren().add(helm);
 
         double top = DOME_TOP - FIN_LENGTH - FIN_LIFT - 1;
@@ -173,7 +123,7 @@ public final class Logo {
         drawing.getTransforms().add(new Translate(24 - 12 * scale,
                 24 - LIFT_IN_RING - (top + BOTTOM) / 2 * scale));
         drawing.getTransforms().add(new Scale(scale, scale, 0, 0));
-        return new Group(ring(palette), drawing);
+        return new Group(ring(), drawing);
     }
 
     private static Shape helm() {

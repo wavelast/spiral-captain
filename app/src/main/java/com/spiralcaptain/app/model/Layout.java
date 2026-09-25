@@ -14,7 +14,8 @@ public enum Layout implements Arrangement {
     FOUR_CORNERS("Four corners"),
     SIDE_BY_SIDE("Side by side"),
     THREE_ACROSS("Three across"),
-    CASCADE("Cascade"),
+    CASCADE("Cascade left"),
+    CASCADE_RIGHT("Cascade right"),
     TWO_MONITORS("Two monitors");
 
     public static final String KEY_PREFIX = "layout:";
@@ -51,7 +52,7 @@ public enum Layout implements Arrangement {
 
     @Override
     public boolean stacked() {
-        return this == CASCADE;
+        return this == CASCADE || this == CASCADE_RIGHT;
     }
 
     @Override
@@ -83,18 +84,8 @@ public enum Layout implements Arrangement {
                         box(x + third, y, third, height, false, false, true),
                         box(x + 2 * third, y, width - 2 * third, height, true, false, true));
             }
-            case CASCADE -> {
-                int step = Math.max(CASCADE_MIN_STEP, Math.round(height * CASCADE_STEP));
-                int boxWidth = width - CASCADE_STEPS * step;
-                int boxHeight = height - CASCADE_STEPS * step;
-                List<Placement> places = new ArrayList<>();
-                for (int slot = 0; slot <= CASCADE_STEPS; slot++) {
-                    int offset = (slot == 0 ? CASCADE_STEPS : CASCADE_STEPS - slot) * step;
-                    places.add(box(x + offset, y + offset, boxWidth, boxHeight, false, false,
-                            true));
-                }
-                yield places;
-            }
+            case CASCADE -> cascade(area, false);
+            case CASCADE_RIGHT -> cascade(area, true);
             case TWO_MONITORS -> {
                 List<Placement> places = new ArrayList<>();
                 places.add(box(x, y, width, height, false, false, false));
@@ -102,6 +93,23 @@ public enum Layout implements Arrangement {
                 yield places;
             }
         };
+    }
+
+    private static List<Placement> cascade(int[] area, boolean toRight) {
+        int x = area[0];
+        int y = area[1];
+        int width = area[2];
+        int height = area[3];
+        int step = Math.max(CASCADE_MIN_STEP, Math.round(height * CASCADE_STEP));
+        int boxWidth = width - CASCADE_STEPS * step;
+        int boxHeight = height - CASCADE_STEPS * step;
+        List<Placement> places = new ArrayList<>();
+        for (int slot = 0; slot <= CASCADE_STEPS; slot++) {
+            int offset = (slot == 0 ? CASCADE_STEPS : CASCADE_STEPS - slot) * step;
+            int left = toRight ? x + CASCADE_STEPS * step - offset : x + offset;
+            places.add(box(left, y + offset, boxWidth, boxHeight, toRight, false, true));
+        }
+        return places;
     }
 
     private static List<Placement> quarters(int[] area) {
