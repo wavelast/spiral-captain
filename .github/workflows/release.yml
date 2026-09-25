@@ -41,6 +41,6 @@ jobs:
           gh release create "$env:GITHUB_REF_NAME" `
             "dist/SpiralCaptain-$version-x64-setup.msi" `
             "dist/SpiralCaptain-$version-portable.exe" `
-            --title "Spiral Captain $version" `
+            --title "Spiral Captain $env:GITHUB_REF_NAME" `
             --generate-notes `
             --draft
