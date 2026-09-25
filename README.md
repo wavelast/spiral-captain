@@ -62,9 +62,7 @@ Your passwords are never stored. Spiral Captain keeps only the scrambled form th
 when you log in, encrypted so it only works for your Windows user on this PC. It has no analytics,
 and the only thing it connects to is the game's own update server.
 
-## License
-
-[MIT](LICENSE)
+## Disclaimer
 
 Spiral Captain is a fan-made tool. It is not affiliated with, endorsed by or supported by Grey
 Havens or Three Rings. Spiral Knights and its assets are the property of their respective owners.
