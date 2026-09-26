@@ -1,6 +1,7 @@
 package com.spiralcaptain.app.store;
 
 import com.spiralcaptain.app.model.CustomLayout;
+import com.spiralcaptain.app.model.Hotkey;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 public final class Settings {
@@ -18,6 +20,9 @@ public final class Settings {
     public static final String THEME_SYSTEM = "system";
     public static final String THEME_LIGHT = "light";
     public static final String THEME_DARK = "dark";
+
+    private static final String WINDOW_HOTKEY = "windowHotkey.";
+    private static final String NO_HOTKEY = "none";
 
     private final Path file;
     private final Properties values = new Properties();
@@ -84,6 +89,23 @@ public final class Settings {
 
     public void checkForUpdates(boolean check) {
         values.setProperty("checkForUpdates", Boolean.toString(check));
+    }
+
+    public boolean windowHotkeys() {
+        return flag("windowHotkeys", true);
+    }
+
+    public void windowHotkeys(boolean on) {
+        values.setProperty("windowHotkeys", Boolean.toString(on));
+    }
+
+    public Optional<Hotkey> windowHotkey(int number) {
+        String stored = values.getProperty(WINDOW_HOTKEY + number);
+        return stored == null ? Hotkey.defaultFor(number) : Hotkey.parse(stored);
+    }
+
+    public void windowHotkey(int number, Hotkey hotkey) {
+        values.setProperty(WINDOW_HOTKEY + number, hotkey == null ? NO_HOTKEY : hotkey.text());
     }
 
     public String arrangeMonitor() {

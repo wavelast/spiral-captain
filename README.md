@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-f5c400.svg)](LICENSE)
 [![Version](https://img.shields.io/github/v/release/wavelast/spiral-captain?label=version&color=f5c400)](../../releases/latest)
 
-A multi-account launcher for **Spiral Knights** on Windows. Keep all your accounts in one list,
+A multi-account launcher for Spiral Knights on Windows. Keep all your accounts in one list,
 launch them with one click straight to the right knight, and lay the game windows out on your
 screen.
 
@@ -20,6 +20,8 @@ screen.
 - Alts can start muted, on low graphics and at a lower CPU priority, so the main client stays
   smooth.
 - Offers to update Spiral Knights when a patch is out.
+- Hotkeys to switch between the game windows: Alt+1 to Alt+5 by default, changeable on the
+  Hotkeys page.
 - Light and dark themes, or follow Windows.
 
 ![The Arrange page](screenshots/arrange.png)
@@ -28,33 +30,32 @@ screen.
 
 Get the latest version from the [Releases page](../../releases/latest):
 
-- **`SpiralCaptain-<version>-x64-setup.msi`** installs Spiral Captain, with optional desktop and
+- `SpiralCaptain-<version>-x64-setup.msi` installs Spiral Captain, with optional desktop and
   Start menu shortcuts.
-- **`SpiralCaptain-<version>-portable.exe`** is a single file you can keep anywhere. It unpacks
+- `SpiralCaptain-<version>-portable.exe` is a single file you can keep anywhere. It unpacks
   itself into a folder next to it the first time you run it and keeps its accounts there too.
 
 You need 64-bit Windows 10 or 11 and Spiral Knights installed. Java is not needed.
 
 Spiral Captain is not code-signed, so Windows may show "Windows protected your PC" the first time.
-Click **More info**, then **Run anyway**.
+Click "More info", then "Run anyway".
 
 ## Getting started
 
-1. Press **Add account**, type the account name, then **Set password**. For the account Steam is
-   logged into, use **Add Steam account** instead.
-2. Type each account's knight name in the **Knight** column, or leave it empty to pick in game.
-3. Drag the account you play on to the top. Account **#1** is the main client.
-4. Tick the accounts you want and press **Launch**.
-5. On the **Arrange** page, press **Arrange** on a layout. It is used again automatically next time.
-
-![The Settings page](screenshots/settings.png)
+1. Press "Add account", type the account name, then "Set password". For the account Steam is
+   logged into, use "Add Steam account" instead.
+2. Type each account's knight name in the "Knight" column, or leave it empty to pick in game.
+3. Drag the account you play on to the top. Account #1 is the main client.
+4. Tick the accounts you want and press "Launch".
+5. On the "Arrange" page, press "Arrange" on a layout. It is used again automatically next
+   time.
 
 ## Is this allowed?
 
 Playing several Spiral Knights accounts at once is allowed; software that plays the game for you or
 changes it is not. Spiral Captain only starts the unmodified game with its own login options and
-moves windows through Windows. It never reads, changes or sends input to the game. Use it at your
-own risk.
+moves windows through Windows. Its hotkeys only bring a game window to the front, like clicking it
+on the taskbar. It never reads, changes or sends input to the game. Use it at your own risk.
 
 ## Privacy
 

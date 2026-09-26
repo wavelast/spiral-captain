@@ -7,8 +7,10 @@ set STAGE=%ROOT%target\package-input
 set BUNDLE=%ROOT%target\portable
 set INSTALLER=%ROOT%target\installer
 set DIST=%ROOT%dist
-set VERSION=1.0.0
-if not "%~1"=="" set VERSION=%~1
+set VERSION=%~1
+if "%VERSION%"=="" for /f "delims=" %%T in ('git -C "%ROOT%." describe --tags --abbrev^=0 --match "v[0-9]*" 2^>nul') do set VERSION=%%T
+if "%VERSION%"=="" set VERSION=1.0.0
+if /i "%VERSION:~0,1%"=="v" set VERSION=%VERSION:~1%
 set ICONS=%ROOT%app\src\main\resources\icons
 set ICON=%ROOT%target\spiral-captain.ico
 set PORTABLE_EXE=SpiralCaptain-%VERSION%-portable.exe
@@ -23,7 +25,7 @@ if not errorlevel 1 (
   exit /b 1
 )
 
-echo === Building ===
+echo === Building %VERSION% ===
 call mvn -q -f "%ROOT%pom.xml" package -DskipTests
 if errorlevel 1 (
   echo Build failed.

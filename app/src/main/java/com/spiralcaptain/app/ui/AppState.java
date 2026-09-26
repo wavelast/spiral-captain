@@ -1,6 +1,7 @@
 package com.spiralcaptain.app.ui;
 
 import com.spiralcaptain.app.control.Fleet;
+import com.spiralcaptain.app.control.WindowSwitcher;
 import com.spiralcaptain.app.launch.PrefsJar;
 import com.spiralcaptain.app.launch.GameInstall;
 import com.spiralcaptain.app.model.Account;
@@ -29,6 +30,7 @@ public final class AppState {
     private GameInstall install;
     private Path prefsJar;
     private Fleet fleet;
+    private WindowSwitcher switcher;
     private Consumer<String> alerts = message -> { };
 
     public AppState() {
@@ -44,6 +46,7 @@ public final class AppState {
         if (install != null) {
             fleet = new Fleet(settings, install, prefsJar);
             fleet.onChange(() -> Platform.runLater(this::refresh));
+            switcher = new WindowSwitcher(settings, fleet, this::alert);
         }
     }
 
@@ -65,6 +68,18 @@ public final class AppState {
 
     public Fleet fleet() {
         return fleet;
+    }
+
+    public void hotkeysChanged() {
+        if (switcher != null) {
+            switcher.update(accounts());
+        }
+    }
+
+    public void suspendHotkeys(boolean suspend) {
+        if (switcher != null) {
+            switcher.suspend(suspend);
+        }
     }
 
     public StringProperty status() {
@@ -95,6 +110,7 @@ public final class AppState {
                 status.set(log.getLast());
             }
         }
+        hotkeysChanged();
         refreshers.forEach(Runnable::run);
     }
 
@@ -223,6 +239,9 @@ public final class AppState {
 
     public void shutdown() {
         save();
+        if (switcher != null) {
+            switcher.shutdown();
+        }
         if (fleet != null) {
             fleet.shutdown();
         }

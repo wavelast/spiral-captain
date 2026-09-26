@@ -350,6 +350,13 @@ public final class Fleet {
         });
     }
 
+    public void bringToFront(Account account) {
+        RunningClient client = clients.get(account.id());
+        if (client != null && client.alive() && client.hasWindow()) {
+            GameWindows.bringToFront(client.window());
+        }
+    }
+
     public void quit(RunningClient client) {
         background.execute(() -> {
             if (client.hasWindow() && GameWindows.exists(client.window())) {

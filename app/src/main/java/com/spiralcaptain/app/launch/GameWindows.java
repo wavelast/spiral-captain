@@ -289,6 +289,16 @@ public final class GameWindows {
         return aware(() -> (int) FOREGROUND.invokeExact(handle(window)) != 0);
     }
 
+    public static boolean bringToFront(long window) {
+        return aware(() -> {
+            MemorySegment hwnd = handle(window);
+            if ((int) IS_ICONIC.invokeExact(hwnd) != 0) {
+                int shown = (int) SHOW.invokeExact(hwnd, SW_RESTORE);
+            }
+            return (int) FOREGROUND.invokeExact(hwnd) != 0;
+        });
+    }
+
     public static void close(long window) {
         aware(() -> (int) POST.invokeExact(handle(window), WM_CLOSE, 0L, 0L));
     }

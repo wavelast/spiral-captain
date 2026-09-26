@@ -285,6 +285,26 @@
     -fx-font-size: 11px;
 }
 
+.button.hotkey-field {
+    -fx-font-weight: normal;
+    -fx-min-width: 130px;
+    -fx-pref-width: 130px;
+}
+
+.button.hotkey-field:unset {
+    -fx-text-fill: -sa-text-faint;
+}
+
+.button.hotkey-field:listening {
+    -fx-background-color: -sa-accent, -sa-accent-soft;
+    -fx-text-fill: -sa-text;
+}
+
+.hotkey-number {
+    -fx-text-fill: -sa-text-dim;
+    -fx-font-weight: bold;
+}
+
 .page {
     -fx-padding: 28 32 22 32;
 }

@@ -10,6 +10,7 @@ import com.spiralcaptain.app.ui.AccountsPage;
 import com.spiralcaptain.app.ui.AppState;
 import com.spiralcaptain.app.ui.Dialogs;
 import com.spiralcaptain.app.ui.ArrangePage;
+import com.spiralcaptain.app.ui.HotkeysPage;
 import com.spiralcaptain.app.ui.Logo;
 import com.spiralcaptain.app.ui.Pages;
 import com.spiralcaptain.app.ui.SettingsPage;
@@ -65,13 +66,14 @@ public final class SpiralCaptainApp extends Application {
         AccountsPage accounts = new AccountsPage(state);
         SettingsPage settings = new SettingsPage(state);
         ArrangePage arrange = new ArrangePage(state);
+        HotkeysPage hotkeys = new HotkeysPage(state);
 
         BorderPane main = new BorderPane();
         main.setCenter(pages);
         main.getStyleClass().add("main-area");
 
         BorderPane root = new BorderPane();
-        root.setLeft(sidebar(accounts, Pages.scrolling(arrange), settings));
+        root.setLeft(sidebar(accounts, Pages.scrolling(arrange), hotkeys, settings));
         root.setCenter(main);
         root.getStyleClass().add("app-root");
 
@@ -107,13 +109,14 @@ public final class SpiralCaptainApp extends Application {
         checkForUpdates();
     }
 
-    private VBox sidebar(Node accounts, Node arrange, Node settings) {
+    private VBox sidebar(Node accounts, Node arrange, Node hotkeys, Node settings) {
         VBox brand = new VBox(Logo.create());
         brand.getStyleClass().add("brand");
 
         ToggleGroup group = new ToggleGroup();
         ToggleButton accountsTab = navButton("Accounts", Theme.Icon.ACCOUNTS, accounts, group);
         arrangeTab = navButton("Arrange", Theme.Icon.ARRANGE, arrange, group);
+        ToggleButton hotkeysTab = navButton("Hotkeys", Theme.Icon.HOTKEYS, hotkeys, group);
         ToggleButton settingsTab = navButton("Settings", Theme.Icon.SETTINGS, settings, group);
         group.selectedToggleProperty().addListener((source, was, now) -> {
             if (now == null && was != null) {
@@ -121,7 +124,7 @@ public final class SpiralCaptainApp extends Application {
             }
         });
         accountsTab.setSelected(true);
-        VBox nav = new VBox(4, accountsTab, arrangeTab, settingsTab);
+        VBox nav = new VBox(4, accountsTab, arrangeTab, hotkeysTab, settingsTab);
         nav.getStyleClass().add("nav");
 
         Region spacer = new Region();
